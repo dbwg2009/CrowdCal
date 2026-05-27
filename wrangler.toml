@@ -1,0 +1,16 @@
+name = "crowdcal-worker"
+type = "javascript"
+account_id = ""
+workers_dev = true
+compatibility_date = "2026-05-27"
+main = "./worker/index.ts"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "crowdcal"
+
+[vars]
+# Set these in .dev.vars for local dev
+# SPOTIFY_CLIENT_ID = ""
+# SPOTIFY_CLIENT_SECRET = ""
+# SPOTIFY_REFRESH_TOKEN = ""

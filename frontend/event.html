@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event | CrowdCal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1 id="event-name"></h1>
+    <div><strong>Date/Time:</strong> <span id="event-datetime"></span></div>
+    <div><strong>Location:</strong> <span id="event-location"></span></div>
+    <div><strong>Description:</strong> <span id="event-description"></span></div>
+    <div><strong>Spotify Playlist:</strong> <a id="event-playlist" href="#" target="_blank">Open Playlist</a></div>
+    <h2>Attendees</h2>
+    <ul id="attendee-list"></ul>
+    <form id="rsvp-form">
+      <label>Your Name<input name="name" required></label>
+      <button type="submit">I'm going</button>
+    </form>
+    <div id="rsvp-result"></div>
+  </main>
+  <script src="event.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrowdCal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>CrowdCal</h1>
+    <form id="event-form">
+      <label>Event Name<input name="name" required></label>
+      <label>Date/Time<input name="datetime" type="datetime-local" required></label>
+      <label>Location (optional)<input name="location"></label>
+      <label>Description (optional)<textarea name="description"></textarea></label>
+      <label>Submitted By<input name="submitted_by" required></label>
+      <button type="submit">Create Event</button>
+    </form>
+    <div id="form-result"></div>
+  </main>
+  <script src="main.js"></script>
+</body>
+</html>
