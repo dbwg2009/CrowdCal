@@ -3,10 +3,10 @@ export interface Event {
   id: string;
   name: string;
   datetime: string; // ISO yyyy-mm-dd string
-  location?: string;
-  description?: string;
+  location?: string | null;
+  description?: string | null;
   submitted_by: string;
-  spotify_playlist_url?: string;
+  spotify_playlist_url?: string | null;
   created_at: string;
 }
 

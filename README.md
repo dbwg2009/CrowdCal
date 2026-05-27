@@ -7,7 +7,7 @@ CrowdCal is a self-hosted group event calendar. Friends submit events via a simp
 - Cloudflare Workers with Hono.js and TypeScript
 - Cloudflare D1 (SQLite) via Drizzle ORM
 - Cloudflare Pages (vanilla HTML/CSS/JS) for the frontend
-- `ical-generator` for iCal feed generation
+- Worker-safe iCal feed generation using native string output
 - Spotify Web API accessed via native `fetch()` calls (no Node.js SDK)
 
 ## Prerequisites
@@ -176,7 +176,7 @@ Updates appear automatically whenever anyone adds an event.
 - `worker/` — Cloudflare Worker source (Hono routes, Spotify integration, calendar generation, DB access)
   - `api.ts` — Hono route definitions for the REST API (events, RSVPs, calendar feed, OAuth callback)
   - `spotify.ts` — Spotify helper functions using native `fetch()` (token refresh, create playlist)
-  - `calendar.ts` — Builds iCal data using `ical-generator` (now accepts `baseUrl`)
+  - `calendar.ts` — Builds iCal data with a Worker-safe manual iCal generator (accepts `baseUrl`)
   - `db.ts` — D1 database helper to get a Drizzle client
   - `types.d.ts` — shared TypeScript types and `Env` definition for worker bindings
 
@@ -192,6 +192,7 @@ Updates appear automatically whenever anyone adds an event.
 
 ## Known issues and important notes
 
+- `ical-generator` is not compatible with Cloudflare Workers because it requires Node.js `fs`. iCal feeds are generated using a Worker-safe custom generator.
 - `spotify-web-api-node` was removed because it does not run on Cloudflare Workers. Spotify integration is implemented with native `fetch()` calls.
 - Drizzle D1 requires `eq()` from `drizzle-orm` inside `.where()`; chained `.eq()` on columns is not supported.
 - `process.env` does not exist in Cloudflare Workers. The worker reads secrets from the `env` object available in route handlers (see `worker/types.d.ts` and `api.ts`).

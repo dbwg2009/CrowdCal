@@ -1,0 +1,19 @@
+{
+  "name": "crowdcal",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cd worker && npx wrangler dev --port 8787",
+    "check": "cd worker && npx tsc --noEmit"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.42.0",
+    "hono": "^4.0.0",
+    "nanoid": "^5.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.202.0",
+    "@types/node": "^20.14.0",
+    "typescript": "^6.0.0"
+  }
+}

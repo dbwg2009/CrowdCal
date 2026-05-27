@@ -1,25 +1,26 @@
 // Hono.js API routes for CrowdCal
 import { Hono } from 'hono';
 import { nanoid } from 'nanoid';
-import { getDb } from './db';
-import { refreshAccessToken, getSpotifyUserId, createCollaborativePlaylist } from './spotify';
-import { generateICal } from './calendar';
+import { getDb } from './db.js';
+import { refreshAccessToken, getSpotifyUserId, createCollaborativePlaylist } from './spotify.js';
+import { generateICal } from './calendar.js';
 import { eq } from 'drizzle-orm';
-import { events as eventsTable, rsvps as rsvpsTable } from '../db/schema';
-import { Event, RSVP } from './types';
+import { events as eventsTable, rsvps as rsvpsTable } from '../db/schema.js';
+import { Event, RSVP, Env } from './types.js';
 
 const api = new Hono();
 
 // Event submission
 api.post('/events', async (c) => {
-  const db = getDb(c.env);
+  const env = c.env as Env;
+  const db = getDb(env);
   const body = await c.req.json();
   const id = nanoid();
   const now = new Date().toISOString();
   // Create Spotify playlist
   let spotify_playlist_url = '';
   try {
-    const accessToken = await refreshAccessToken(c.env as any);
+    const accessToken = await refreshAccessToken(env);
     const userId = await getSpotifyUserId(accessToken);
     spotify_playlist_url = await createCollaborativePlaylist(accessToken, userId, body.name);
   } catch (e) {
@@ -40,7 +41,8 @@ api.post('/events', async (c) => {
 
 // RSVP submission
 api.post('/events/:id/rsvp', async (c) => {
-  const db = getDb(c.env);
+  const env = c.env as Env;
+  const db = getDb(env);
   const event_id = c.req.param('id');
   const body = await c.req.json();
   const id = nanoid();
@@ -56,7 +58,8 @@ api.post('/events/:id/rsvp', async (c) => {
 
 // Get iCal feed
 api.get('/calendar.ics', async (c) => {
-  const db = getDb(c.env);
+  const env = c.env as Env;
+  const db = getDb(env);
   const events: Event[] = await db.select().from(eventsTable);
   const rsvps: RSVP[] = await db.select().from(rsvpsTable);
   const rsvpCounts: Record<string, number> = {};
@@ -71,7 +74,8 @@ api.get('/calendar.ics', async (c) => {
 
 // Get event details
 api.get('/events/:id', async (c) => {
-  const db = getDb(c.env);
+  const env = c.env as Env;
+  const db = getDb(env);
   const event = await db.select().from(eventsTable).where(eq(eventsTable.id, c.req.param('id'))).get();
   if (!event) return c.notFound();
   const rsvps = await db.select().from(rsvpsTable).where(eq(rsvpsTable.event_id, event.id));
@@ -90,7 +94,8 @@ api.get('/spotify/callback', async (c) => {
     body.set('code', code);
     body.set('redirect_uri', redirectUri);
 
-    const auth = 'Basic ' + btoa(`${(c.env as any).SPOTIFY_CLIENT_ID}:${(c.env as any).SPOTIFY_CLIENT_SECRET}`);
+    const env = c.env as Env;
+    const auth = 'Basic ' + btoa(`${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`);
     const res = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
@@ -103,8 +108,8 @@ api.get('/spotify/callback', async (c) => {
       const text = await res.text();
       return c.text(`token exchange failed: ${res.status} ${text}`, 500);
     }
-    const data = await res.json();
-    const refreshToken = data.refresh_token;
+    const data = await res.json() as any;
+    const refreshToken = data.refresh_token as string | undefined;
     if (!refreshToken) return c.text('no refresh_token returned', 500);
     return c.text(refreshToken);
   } catch (err) {

@@ -1,5 +1,5 @@
 // Spotify integration for CrowdCal using native fetch (Cloudflare Workers compatible)
-import { Env } from './types';
+import { Env } from './types.js';
 
 function basicAuth(clientId: string, clientSecret: string) {
   return 'Basic ' + btoa(`${clientId}:${clientSecret}`);
@@ -21,7 +21,7 @@ export async function refreshAccessToken(env: Env): Promise<string> {
   if (!res.ok) {
     throw new Error(`Failed to refresh Spotify token: ${res.status}`);
   }
-  const data = await res.json();
+  const data = await res.json() as any;
   return data.access_token as string;
 }
 
@@ -30,7 +30,7 @@ export async function getSpotifyUserId(accessToken: string): Promise<string> {
     headers: { 'Authorization': `Bearer ${accessToken}` },
   });
   if (!res.ok) throw new Error('Failed to fetch Spotify user');
-  const data = await res.json();
+  const data = await res.json() as any;
   return data.id as string;
 }
 
@@ -44,6 +44,6 @@ export async function createCollaborativePlaylist(accessToken: string, userId: s
     body: JSON.stringify({ name, collaborative: true, public: false }),
   });
   if (!res.ok) throw new Error(`Failed to create Spotify playlist: ${res.status}`);
-  const data = await res.json();
+  const data = await res.json() as any;
   return data.external_urls?.spotify as string;
 }
