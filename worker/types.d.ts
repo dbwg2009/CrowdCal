@@ -16,3 +16,12 @@ export interface RSVP {
   name: string;
   created_at: string;
 }
+
+import type { D1Database } from '@cloudflare/workers-types';
+
+export interface Env {
+  DB: D1Database;
+  SPOTIFY_CLIENT_ID: string;
+  SPOTIFY_CLIENT_SECRET: string;
+  SPOTIFY_REFRESH_TOKEN: string;
+}

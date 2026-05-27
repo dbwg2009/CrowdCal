@@ -2,9 +2,10 @@
 import ical, { ICalEventData } from 'ical-generator';
 import { Event, RSVP } from './types';
 
-export function generateICal(events: Event[], rsvpCounts: Record<string, number>): string {
+export function generateICal(events: Event[], rsvpCounts: Record<string, number>, baseUrl: string): string {
   const cal = ical({ name: 'CrowdCal Events' });
   for (const event of events) {
+    const eventUrl = `${baseUrl}/events/${event.id}`;
     cal.createEvent({
       id: event.id,
       start: new Date(event.datetime),
@@ -13,11 +14,11 @@ export function generateICal(events: Event[], rsvpCounts: Record<string, number>
       location: event.location,
       description: [
         event.description || '',
-        `RSVP: https://<your-domain>/events/${event.id}`,
+        `RSVP: ${eventUrl}`,
         event.spotify_playlist_url ? `Spotify: ${event.spotify_playlist_url}` : '',
         `Attendees: ${rsvpCounts[event.id] || 0}`
       ].filter(Boolean).join('\n'),
-      url: `https://<your-domain>/events/${event.id}`,
+      url: eventUrl,
     } as ICalEventData);
   }
   return cal.toString();
