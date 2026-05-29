@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "cd worker && npx wrangler dev --port 8787",
-    "check": "cd worker && npx tsc --noEmit"
+    "check": "cd worker && npx tsc --noEmit",
+    "deploy": "node scripts/build-frontend-config.js && npx wrangler pages deploy ./frontend"
   },
   "dependencies": {
     "drizzle-kit": "^0.31.10",

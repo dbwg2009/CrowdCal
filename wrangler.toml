@@ -14,13 +14,4 @@ migrations_dir = "db/migrations"
 # SPOTIFY_CLIENT_ID = ""
 # SPOTIFY_CLIENT_SECRET = ""
 # SPOTIFY_REFRESH_TOKEN = ""
-
-# Pages configuration
-[env.production]
-pages_build_output_dir = "frontend"
-vars = { ADMIN_PASSWORD = "" }
-
-# Build script to generate config with secrets
-[env.production.build]
-command = "node scripts/build-frontend-config.js"
-watch_paths = ["frontend/**/*.js"]
+# ADMIN_PASSWORD = ""
