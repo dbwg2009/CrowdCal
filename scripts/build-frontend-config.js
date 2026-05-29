@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 // Build script - generates frontend config from environment secrets
-// Runs automatically during: wrangler pages deploy ./frontend
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const adminPassword = process.env.ADMIN_PASSWORD;
 
 if (!adminPassword) {
   console.error('❌ ERROR: ADMIN_PASSWORD not set');
-  console.error('   Set it in Cloudflare Pages settings or via wrangler secret');
+  console.error('   Set it: $env:ADMIN_PASSWORD = "your-password" (PowerShell)');
   process.exit(1);
 }
 
@@ -24,4 +25,4 @@ const CONFIG_LOCAL = {
 
 const outputPath = path.join(__dirname, '..', 'frontend', 'config.local.js');
 fs.writeFileSync(outputPath, configContent);
-console.log('✓ Generated frontend/config.local.js from ADMIN_PASSWORD secret');
+console.log('✓ Generated frontend/config.local.js from ADMIN_PASSWORD');
