@@ -2,12 +2,14 @@
 
 Follow these steps to deploy the latest changes to CrowdCal.
 
-## 1. Configure Admin Password
+## 1. Set Admin Password Environment Variable
 
-Edit `frontend/admin.js` and change the admin password:
+```bash
+# Windows PowerShell
+$env:ADMIN_PASSWORD = "your-secure-password"
 
-```javascript
-const ADMIN_PASSWORD = 'your-secure-password'; // Change this!
+# Linux/macOS
+export ADMIN_PASSWORD="your-secure-password"
 ```
 
 ## 2. Deploy Worker
@@ -18,13 +20,19 @@ Deploy the backend worker with all the new endpoints:
 cd worker && npx wrangler deploy
 ```
 
-## 3. Deploy Frontend
+## 3. Build & Deploy Frontend
 
-Deploy the frontend with the new admin dashboard:
+Build the config with your password, then deploy:
 
 ```bash
+# Inject password into config (required before deploy)
+node build-config.js
+
+# Deploy frontend
 npx wrangler pages deploy ./frontend
 ```
+
+⚠️ **Important:** Always run `node build-config.js` before deploying. It injects your password from the `ADMIN_PASSWORD` environment variable.
 
 ## New Features Deployed
 

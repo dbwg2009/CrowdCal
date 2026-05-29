@@ -1,25 +1,24 @@
 // Configuration for CrowdCal Admin
 // DO NOT commit sensitive values to git
-// Create config.local.js to override these values
+// Passwords injected at deploy time via environment variables
 
 const CONFIG = {
-  // Admin password - MUST be set via config.local.js or environment
-  // Never hardcode in this file - it's committed to git!
-  ADMIN_PASSWORD: null,
+  // Admin password - injected at build time or via config.local.js
+  ADMIN_PASSWORD: '__ADMIN_PASSWORD__',
 
   // API endpoints
   API_BASE: 'https://crowdcal-worker.dbwg2009.workers.dev/api',
   EVENT_BASE: 'https://crowdcal.pages.dev/event.html?id=',
 };
 
-// Load local overrides if available
+// Load local overrides if available (for development)
 if (typeof CONFIG_LOCAL !== 'undefined') {
   Object.assign(CONFIG, CONFIG_LOCAL);
 }
 
-// Validate required config for production
-if (!CONFIG.ADMIN_PASSWORD) {
-  console.error('ERROR: ADMIN_PASSWORD not configured. Create frontend/config.local.js with your password.');
+// Validate required config
+if (!CONFIG.ADMIN_PASSWORD || CONFIG.ADMIN_PASSWORD === '__ADMIN_PASSWORD__') {
+  console.error('ERROR: ADMIN_PASSWORD not configured. Set via environment variable or config.local.js');
 }
 
 // Export for use in admin.js
