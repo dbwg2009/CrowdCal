@@ -2,6 +2,12 @@ const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID || '';
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET || '';
 const REFRESH_TOKEN = process.env.SPOTIFY_REFRESH_TOKEN || '';
 
+if (!CLIENT_ID || !CLIENT_SECRET || !REFRESH_TOKEN) {
+  console.error('❌ Missing Spotify credentials in environment variables');
+  console.error('   Please set SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, and SPOTIFY_REFRESH_TOKEN');
+  process.exit(1);
+}
+
 // Step 1: refresh token
 console.log('--- Refreshing access token...');
 const tokenRes = await fetch('https://accounts.spotify.com/api/token', {

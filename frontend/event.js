@@ -5,8 +5,20 @@ const rsvpResult = document.getElementById('rsvp-result');
 const attendeeList = document.getElementById('attendee-list');
 const CALENDAR_BASE = 'https://crowdcal-worker.dbwg2009.workers.dev/api/calendar.ics';
 
-// Icon set for deterministic name-based assignment
-const ICON_SET = ['🎸', '🎨', '🎭', '🎪', '🎲', '🎯', '🏆', '🎬', '🎤', '🎧', '🎮', '🚀', '🌟', '⚡', '🔥', '💎', '🌈', '🦄', '🐉', '🦋', '🍕', '🍦', '🌮', '🎂', '🍰', '🎉', '🎊', '🌺', '🌸', '🌻'];
+// Icon set for deterministic name-based assignment (70 diverse emojis)
+// Mix of animals, activities, nature, and fun objects to minimize collisions
+const ICON_SET = [
+  // Animals
+  '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐘', '🦏', '🦓', '🦘', '🐄', '🦬',
+  // Sea creatures
+  '🐠', '🐙', '🦈', '🐚', '🦀', '🦞', '🦐',
+  // Bugs & nature
+  '🦋', '🐛', '🐝', '🌻', '🌺', '🌸', '🌼', '🌷',
+  // Activities & sports
+  '🎸', '🎵', '🎤', '🎭', '🎬', '🎨', '⚽', '🏀', '🎾', '🏐', '🏈', '⛳', '🚴', '🏊', '⛷️', '🏂',
+  // Objects & symbols
+  '🍕', '🍔', '🍟', '🌮', '🍜', '🍱', '🍰', '🎂', '🧁', '🍦', '🍩', '☕', '🎯', '🎲', '🎪', '🚀', '🏆', '💎', '🔥', '⚡', '🌟', '🌈', '💫'
+];
 
 // Deterministic hash function to map names to icons
 function getIconForName(name) {
@@ -99,15 +111,6 @@ async function loadEvent() {
   } else {
     attendeeList.innerHTML = attendeeCards.join('');
   }
-
-  // Update attendee summary with icons
-  const summaryAttendees = [
-    { name: event.submitted_by, icon: organizerIcon },
-    ...rsvps.map(r => ({ name: r.name, icon: getIconForName(r.name) }))
-  ];
-  document.getElementById('attendee-summary').innerHTML = summaryAttendees
-    .map(a => `<span title="${escapeHtml(a.name)}" style="cursor: help;">${a.icon}</span>`)
-    .join('');
 
   // Set calendar ICS link
   document.getElementById('calendar-link').href = CALENDAR_BASE;

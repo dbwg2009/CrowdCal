@@ -4,3 +4,13 @@ worker/node_modules/
 dist/
 worker/dist/
 *.log
+
+# Environment and secrets
+.env
+.env.local
+.dev.vars
+frontend/config.local.js
+
+# Allow example/template files
+!.env.example
+!.dev.vars.example

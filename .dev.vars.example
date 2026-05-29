@@ -1,0 +1,7 @@
+# Cloudflare Worker Environment Variables
+# Copy this to .dev.vars and fill in your actual values
+
+SPOTIFY_CLIENT_ID=your-client-id-here
+SPOTIFY_CLIENT_SECRET=your-client-secret-here
+SPOTIFY_REFRESH_TOKEN=your-refresh-token-here
+ADMIN_PASSWORD=your-secure-password-here

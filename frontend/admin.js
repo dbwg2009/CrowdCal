@@ -1,4 +1,5 @@
 // Admin dashboard for CrowdCal
+// Configuration is loaded from config.js (APP_CONFIG)
 const ADMIN_PASSWORD = APP_CONFIG.ADMIN_PASSWORD;
 const API_BASE = APP_CONFIG.API_BASE;
 const EVENT_BASE = APP_CONFIG.EVENT_BASE;
@@ -147,7 +148,7 @@ async function viewEventPreview(eventId, eventName) {
   document.getElementById('preview-datetime').textContent = new Date(event.datetime).toLocaleString();
   document.getElementById('preview-location').textContent = event.location || '-';
   document.getElementById('preview-organizer').textContent = event.submitted_by;
-  document.getElementById('preview-description').textContent = event.description || 'No description provided';
+  document.getElementById('preview-description').innerHTML = renderMarkdown(event.description);
   if (event.spotify_playlist_url) {
     // Fetch playlist info
     try {
@@ -508,6 +509,12 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+function renderMarkdown(text) {
+  if (!text) return '<p>No description provided</p>';
+  const html = marked.parse(text);
+  return DOMPurify.sanitize(html, { ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'a', 'img'] });
 }
 
 // Initialize page
