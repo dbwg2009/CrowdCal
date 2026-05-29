@@ -3,9 +3,9 @@
 // Create config.local.js to override these values
 
 const CONFIG = {
-  // Admin password - should be set securely
-  // Never hardcode in production - use backend validation instead
-  ADMIN_PASSWORD: localStorage.getItem('crowdcal_admin_password_hash') ? null : 'CHANGE_ME',
+  // Admin password - MUST be set via config.local.js or environment
+  // Never hardcode in this file - it's committed to git!
+  ADMIN_PASSWORD: null,
 
   // API endpoints
   API_BASE: 'https://crowdcal-worker.dbwg2009.workers.dev/api',
@@ -15,6 +15,11 @@ const CONFIG = {
 // Load local overrides if available
 if (typeof CONFIG_LOCAL !== 'undefined') {
   Object.assign(CONFIG, CONFIG_LOCAL);
+}
+
+// Validate required config for production
+if (!CONFIG.ADMIN_PASSWORD) {
+  console.error('ERROR: ADMIN_PASSWORD not configured. Create frontend/config.local.js with your password.');
 }
 
 // Export for use in admin.js
