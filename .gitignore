@@ -9,8 +9,10 @@ worker/dist/
 .env
 .env.local
 .dev.vars
-frontend/config.local.js
 
 # Allow example/template files
 !.env.example
 !.dev.vars.example
+
+# config.local.js is generated at build time from ADMIN_PASSWORD env var
+# It's safe to deploy since it's regenerated fresh each time
