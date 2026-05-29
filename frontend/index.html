@@ -3,22 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CrowdCal</title>
+  <title>Create Event | CrowdCal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
     <h1>CrowdCal</h1>
-    <form id="event-form">
-      <label>Event Name<input name="name" required></label>
-      <label>Date/Time<input name="datetime" type="datetime-local" required></label>
-      <label>Location (optional)<input name="location"></label>
-      <label>Description (optional)<textarea name="description"></textarea></label>
-      <label>Submitted By<input name="submitted_by" required></label>
-      <button type="submit">Create Event</button>
-    </form>
-    <div id="form-result"></div>
+
+    <div id="form-container">
+      <h2>Create New Event</h2>
+      <p style="color: var(--text-secondary);">Add an event to the shared calendar. It will automatically generate a Spotify playlist for the event.</p>
+
+      <form id="event-form">
+        <label>
+          Event Name *
+          <input type="text" name="name" required placeholder="e.g., Summer Picnic">
+        </label>
+
+        <label>
+          Start Date/Time *
+          <input type="datetime-local" name="datetime" required id="start-time">
+        </label>
+
+        <label>
+          End Time (optional)
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn-small btn-outline" onclick="setDuration(30)">30 min</button>
+            <button type="button" class="btn btn-small btn-outline" onclick="setDuration(60)">1 hr</button>
+            <button type="button" class="btn btn-small btn-outline" onclick="setDuration(120)">2 hrs</button>
+            <button type="button" class="btn btn-small btn-outline" onclick="setDuration(180)">3 hrs</button>
+          </div>
+          <input type="datetime-local" name="end_datetime" id="end-time" placeholder="Or set custom end time">
+        </label>
+
+        <label>
+          Location (optional)
+          <input type="text" name="location" placeholder="e.g., Central Park">
+        </label>
+
+        <label>
+          Description (optional)
+          <textarea name="description" placeholder="Tell people about your event..."></textarea>
+        </label>
+
+        <label>
+          Your Name *
+          <input type="text" name="submitted_by" required placeholder="How should we credit you?">
+        </label>
+
+        <button type="submit" class="btn" style="width: 100%;">Create Event</button>
+      </form>
+
+      <div id="form-result"></div>
+    </div>
+
+    <!-- Success State -->
+    <div id="success-container" style="display: none;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--success); margin-bottom: 1rem;">✓ Event Created!</h2>
+        <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem;">Your event has been added to the calendar.</p>
+      </div>
+
+      <div class="card" style="background: linear-gradient(135deg, rgba(0, 188, 212, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%); margin-bottom: 2rem;">
+        <h3 style="margin-top: 0; color: var(--primary);">Share This Event</h3>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Copy the link below and share it with friends:</p>
+
+        <div style="background: var(--neutral-0); padding: 1rem; border-radius: var(--radius-small); margin-bottom: 1rem; border: 1px solid var(--neutral-200);">
+          <code id="success-link" style="word-break: break-all; display: block;"></code>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-primary" onclick="copySuccessLink()">📋 Copy Link</button>
+          <button type="button" class="btn btn-secondary" onclick="openSuccessEvent()">👁️ View Event</button>
+          <button type="button" class="btn btn-outline" onclick="shareSuccessEvent()">📤 Share</button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button type="button" class="btn btn-outline" onclick="viewCalendar()">View Calendar</button>
+        <button type="button" class="btn btn-secondary" onclick="createAnother()">Create Another</button>
+      </div>
+    </div>
   </main>
+
   <script src="main.js"></script>
 </body>
 </html>

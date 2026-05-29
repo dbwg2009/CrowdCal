@@ -3,6 +3,7 @@ export interface Event {
   id: string;
   name: string;
   datetime: string; // ISO yyyy-mm-dd string
+  end_datetime?: string | null; // Optional end time
   location?: string | null;
   description?: string | null;
   submitted_by: string;

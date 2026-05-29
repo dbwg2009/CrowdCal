@@ -1,6 +1,4 @@
 name = "crowdcal-worker"
-type = "javascript"
-account_id = ""
 workers_dev = true
 compatibility_date = "2026-05-27"
 main = "./worker/index.ts"
@@ -8,6 +6,8 @@ main = "./worker/index.ts"
 [[d1_databases]]
 binding = "DB"
 database_name = "crowdcal"
+database_id = "854d529d-d517-4abc-ae68-ff4b346bba5c"
+migrations_dir = "db/migrations"
 
 [vars]
 # Set these in .dev.vars for local dev

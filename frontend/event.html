@@ -9,18 +9,80 @@
 <body>
   <main>
     <h1 id="event-name"></h1>
-    <div><strong>Date/Time:</strong> <span id="event-datetime"></span></div>
-    <div><strong>Location:</strong> <span id="event-location"></span></div>
-    <div><strong>Description:</strong> <span id="event-description"></span></div>
-    <div><strong>Spotify Playlist:</strong> <a id="event-playlist" href="#" target="_blank">Open Playlist</a></div>
-    <h2>Attendees</h2>
-    <ul id="attendee-list"></ul>
-    <form id="rsvp-form">
-      <label>Your Name<input name="name" required></label>
-      <button type="submit">I'm going</button>
-    </form>
-    <div id="rsvp-result"></div>
+
+    <div class="event-card">
+      <!-- Add to Calendar Section -->
+      <div class="gradient-section">
+        <p><strong>📅 Add to Your Calendar</strong></p>
+        <a id="calendar-link" href="#" class="btn btn-secondary">📥 Download Calendar File</a>
+      </div>
+
+      <div class="event-details">
+        <div class="event-detail">
+          <strong>📅 Date/Time:</strong>
+          <div>
+            <span id="event-datetime"></span>
+            <span id="event-duration" class="duration-display"><span id="duration-text"></span></span>
+          </div>
+        </div>
+        <div class="event-detail">
+          <strong>📍 Location:</strong>
+          <span id="event-location"></span>
+        </div>
+        <div class="event-detail">
+          <strong>👤 Organizer:</strong>
+          <span id="event-organizer"></span>
+        </div>
+      </div>
+
+      <div class="description-section">
+        <h3>Description</h3>
+        <p id="event-description"></p>
+      </div>
+
+      <div class="event-detail" style="align-items: center;">
+        <strong>🎵 Spotify Playlist:</strong>
+        <a id="event-playlist" href="#" target="_blank" class="btn btn-small btn-outline">Open Playlist</a>
+      </div>
+
+      <div class="event-detail" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+        <strong>👥 Attendees So Far:</strong>
+        <div id="attendee-summary" style="font-size: 1.8rem; display: flex; gap: 0.25rem; flex-wrap: wrap;"></div>
+      </div>
+    </div>
+
+    <!-- Attendees Section -->
+    <div class="mt-3">
+      <h2>Attendees</h2>
+      <div id="attendee-list" class="attendee-grid">
+        <p class="no-rsvps-text">No RSVPs yet</p>
+      </div>
+    </div>
+
+    <!-- RSVP Form -->
+    <div class="card rsvp-section">
+      <h2>RSVP</h2>
+      <p>Let people know you're attending!</p>
+
+      <form id="rsvp-form">
+        <label>
+          Your Name *
+          <input type="text" name="name" required placeholder="What's your name?">
+          <div id="icon-preview" style="margin-top: 0.5rem; font-size: 1.5rem; min-height: 1.5rem; display: none;"></div>
+        </label>
+        <button type="submit" class="btn" style="width: 100%;">I'm Going!</button>
+      </form>
+
+      <div id="rsvp-result"></div>
+    </div>
+
+    <!-- Create Event Button -->
+    <div class="footer-section">
+      <p>Want to create your own event?</p>
+      <a href="index.html" class="btn btn-secondary" style="display: inline-block;">+ Create New Event</a>
+    </div>
   </main>
+
   <script src="event.js"></script>
 </body>
 </html>

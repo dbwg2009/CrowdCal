@@ -1,8 +1,14 @@
-// Entry point for CrowdCal Cloudflare Worker (Hono.js)
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import api from './api.js';
 
 const app = new Hono();
+
+app.use('/api/*', cors({
+  origin: 'https://crowdcal.pages.dev',
+  allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type'],
+}));
 
 app.route('/api', api);
 

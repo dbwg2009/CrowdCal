@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | CrowdCal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>CrowdCal Admin</h1>
+
+    <!-- Login Section -->
+    <div class="admin-login" id="login-container">
+      <div class="card">
+        <h2>Admin Login</h2>
+        <form style="gap: 1rem;">
+          <label>
+            Password
+            <input type="password" id="password" placeholder="Enter admin password">
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="remember-password" style="width: auto;">
+            Remember password
+          </label>
+          <button type="button" onclick="login()" class="btn" style="width: 100%;">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-dashboard" id="admin-dashboard">
+      <!-- Statistics -->
+      <div class="stats">
+        <div class="stat-box">
+          <span>Total Events</span>
+          <strong id="event-count">0</strong>
+        </div>
+        <div class="stat-box">
+          <span>Total RSVPs</span>
+          <strong id="rsvp-count">0</strong>
+        </div>
+        <div class="stat-box">
+          <span>Calendar Subscribers</span>
+          <strong id="subscriber-count">0</strong>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="admin-controls">
+        <button type="button" onclick="refreshAllData()" class="btn btn-secondary">🔄 Refresh Data</button>
+        <button type="button" onclick="logout()" class="btn btn-outline">Logout</button>
+      </div>
+
+      <!-- Events Table -->
+      <h2>Events</h2>
+      <div class="table-responsive">
+        <table id="events-table">
+          <thead>
+            <tr>
+              <th>Event Name</th>
+              <th>Date/Time</th>
+              <th>Location</th>
+              <th>Organizer</th>
+              <th>RSVPs</th>
+              <th>Spotify</th>
+              <th>Link</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="events-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Calendar Subscribers -->
+      <h2 class="mt-3">Calendar Subscribers</h2>
+      <div class="table-responsive">
+        <table id="subscribers-table">
+          <thead>
+            <tr>
+              <th>IP Address</th>
+              <th>Calendar App</th>
+              <th>Last Access</th>
+              <th>Total Accesses</th>
+            </tr>
+          </thead>
+          <tbody id="subscribers-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Event Preview Modal -->
+  <div class="modal" id="event-preview-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="preview-event-name"></h2>
+        <button type="button" class="btn btn-small btn-outline" onclick="copyEventLink()" title="Copy event link">
+          📋 Copy Link
+        </button>
+      </div>
+
+      <div class="event-details">
+        <div class="event-detail">
+          <strong>Date/Time:</strong>
+          <span id="preview-datetime"></span>
+        </div>
+        <div class="event-detail">
+          <strong>Location:</strong>
+          <span id="preview-location"></span>
+        </div>
+        <div class="event-detail">
+          <strong>Organizer:</strong>
+          <span id="preview-organizer"></span>
+        </div>
+        <div class="event-detail">
+          <strong>Description:</strong>
+          <p id="preview-description" style="margin: 0; margin-top: 0.25rem;"></p>
+        </div>
+        <div class="event-detail">
+          <strong>Spotify:</strong>
+          <span id="preview-spotify"></span>
+        </div>
+      </div>
+
+      <div style="background: var(--neutral-50); padding: 1rem; border-radius: var(--radius-small); margin-bottom: 1.5rem;">
+        <p style="margin: 0; color: var(--text-secondary); font-size: 0.875rem;">
+          <strong>Share this link with others:</strong><br>
+          <code style="background: var(--neutral-0); padding: 0.5rem; border-radius: 4px; display: block; margin-top: 0.5rem; word-break: break-all;" id="preview-link-text"></code>
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeEventPreview()">Close</button>
+        <button type="button" class="btn btn-secondary" onclick="openEventInNewTab()">Open Page</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RSVP View Modal -->
+  <div class="modal" id="rsvp-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>RSVPs for <span id="rsvp-event-name"></span></h2>
+        <button type="button" class="btn btn-small btn-secondary" onclick="refreshRsvpData()">🔄 Refresh</button>
+      </div>
+
+      <div class="export-buttons">
+        <button type="button" class="btn btn-small btn-outline" onclick="exportRsvpCsv()">📥 CSV</button>
+        <button type="button" class="btn btn-small btn-outline" onclick="exportRsvpPdf()">📄 PDF</button>
+        <button type="button" class="btn btn-small btn-outline" onclick="printRsvpList()">🖨️ Print</button>
+      </div>
+
+      <div id="rsvps-list" class="rsvps-container">
+        <p id="no-rsvps-message" class="no-message">No RSVPs yet</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeRsvpModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Edit Modal -->
+  <div class="modal" id="event-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Edit Event</h2>
+      </div>
+
+      <form id="event-form" onsubmit="saveEvent(event)" style="gap: 1rem;">
+        <label>
+          Event Name
+          <input type="text" id="modal-name" required>
+        </label>
+        <label>
+          Start Date/Time
+          <input type="datetime-local" id="modal-datetime" required>
+        </label>
+        <label>
+          End Time (optional)
+          <div class="duration-buttons">
+            <button type="button" class="btn btn-small btn-outline" onclick="setEditDuration(30)">30 min</button>
+            <button type="button" class="btn btn-small btn-outline" onclick="setEditDuration(60)">1 hr</button>
+            <button type="button" class="btn btn-small btn-outline" onclick="setEditDuration(120)">2 hrs</button>
+            <button type="button" class="btn btn-small btn-outline" onclick="setEditDuration(180)">3 hrs</button>
+          </div>
+          <input type="datetime-local" id="modal-end-datetime">
+        </label>
+        <label>
+          Location
+          <input type="text" id="modal-location">
+        </label>
+        <label>
+          Description
+          <textarea id="modal-description"></textarea>
+        </label>
+        <label>
+          Organizer
+          <input type="text" id="modal-submitted-by" required>
+        </label>
+
+        <h3>RSVPs</h3>
+        <div class="rsvp-list" id="rsvps-container"></div>
+        <button type="button" class="btn btn-outline" onclick="addRsvpField()">+ Add RSVP</button>
+
+        <p class="form-note">
+          Changes will appear in calendar apps on next sync
+        </p>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="delete-modal">
+    <div class="modal-content">
+      <h2>Confirm Delete</h2>
+      <p>Are you sure you want to delete this event? This action cannot be undone.</p>
+      <label style="display: flex; align-items: center; gap: 0.5rem; margin: 1.5rem 0;">
+        <input type="checkbox" id="delete-playlist-checkbox" style="width: auto;">
+        Also delete the Spotify playlist
+      </label>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete Event</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
