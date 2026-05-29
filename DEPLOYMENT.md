@@ -2,37 +2,37 @@
 
 Follow these steps to deploy the latest changes to CrowdCal.
 
-## 1. Set Admin Password Environment Variable
+## 1. Set Admin Password Secret in Cloudflare (One-time setup)
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
+2. Navigate to Pages → Your project → Settings → Environment variables
+3. Add variable `ADMIN_PASSWORD` with your secure password
+4. Apply to Production environment
+
+**Or via wrangler CLI:**
 
 ```bash
-# Windows PowerShell
-$env:ADMIN_PASSWORD = "your-secure-password"
-
-# Linux/macOS
-export ADMIN_PASSWORD="your-secure-password"
+wrangler pages secret put ADMIN_PASSWORD
+# (paste your secure password)
 ```
 
 ## 2. Deploy Worker
 
-Deploy the backend worker with all the new endpoints:
+Deploy the backend worker:
 
 ```bash
 cd worker && npx wrangler deploy
 ```
 
-## 3. Build & Deploy Frontend
+## 3. Deploy Frontend
 
-Build the config with your password, then deploy:
+Deploy the frontend (password auto-injected from Cloudflare secret):
 
 ```bash
-# Inject password into config (required before deploy)
-node build-config.js
-
-# Deploy frontend
 npx wrangler pages deploy ./frontend
 ```
 
-⚠️ **Important:** Always run `node build-config.js` before deploying. It injects your password from the `ADMIN_PASSWORD` environment variable.
+✅ That's it! The build script automatically reads the ADMIN_PASSWORD secret and generates config.local.js.
 
 ## New Features Deployed
 

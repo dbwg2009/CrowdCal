@@ -1,24 +1,23 @@
 // Configuration for CrowdCal Admin
-// DO NOT commit sensitive values to git
-// Passwords injected at deploy time via environment variables
+// config.local.js is auto-generated from ADMIN_PASSWORD secret at deploy time
 
 const CONFIG = {
-  // Admin password - injected at build time or via config.local.js
-  ADMIN_PASSWORD: '__ADMIN_PASSWORD__',
+  // Admin password - loaded from config.local.js (generated at build time)
+  ADMIN_PASSWORD: null,
 
   // API endpoints
   API_BASE: 'https://crowdcal-worker.dbwg2009.workers.dev/api',
   EVENT_BASE: 'https://crowdcal.pages.dev/event.html?id=',
 };
 
-// Load local overrides if available (for development)
+// Load secrets from config.local.js (auto-generated at deploy time)
 if (typeof CONFIG_LOCAL !== 'undefined') {
   Object.assign(CONFIG, CONFIG_LOCAL);
 }
 
-// Validate required config
-if (!CONFIG.ADMIN_PASSWORD || CONFIG.ADMIN_PASSWORD === '__ADMIN_PASSWORD__') {
-  console.error('ERROR: ADMIN_PASSWORD not configured. Set via environment variable or config.local.js');
+// Validate configuration
+if (!CONFIG.ADMIN_PASSWORD) {
+  console.error('ERROR: ADMIN_PASSWORD not configured. Ensure ADMIN_PASSWORD secret is set in Cloudflare.');
 }
 
 // Export for use in admin.js
