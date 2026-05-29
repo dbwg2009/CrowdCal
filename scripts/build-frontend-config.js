@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Build script - generates frontend config from environment secrets
+// Build script - injects ADMIN_PASSWORD into frontend config
 
 import fs from 'fs';
 import path from 'path';
@@ -14,15 +14,16 @@ if (!adminPassword) {
   process.exit(1);
 }
 
-// Generate config.local.js with the secret
-const configContent = `// AUTO-GENERATED - do not edit
-// Generated from ADMIN_PASSWORD environment variable
+// Read config.js
+const configPath = path.join(__dirname, '..', 'frontend', 'config.js');
+let configContent = fs.readFileSync(configPath, 'utf8');
 
-const CONFIG_LOCAL = {
-  ADMIN_PASSWORD: '${adminPassword.replace(/'/g, "\\'")}',
-};
-`;
+// Replace the placeholder with actual password
+configContent = configContent.replace(
+  'ADMIN_PASSWORD: null,',
+  `ADMIN_PASSWORD: '${adminPassword.replace(/'/g, "\\'")}',`
+);
 
-const outputPath = path.join(__dirname, '..', 'frontend', 'config.local.js');
-fs.writeFileSync(outputPath, configContent);
-console.log('✓ Generated frontend/config.local.js from ADMIN_PASSWORD');
+// Write back to config.js
+fs.writeFileSync(configPath, configContent);
+console.log('✓ Injected ADMIN_PASSWORD into frontend/config.js');
